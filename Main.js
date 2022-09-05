@@ -46,13 +46,28 @@ class Player {
         } else {
             this.velocity.y = 0;
         }
-
-
-
-
     }
 
 }
+
+class Platform { //platform is created
+    constructor() {
+        this.position = {
+            x: 200,
+            y: 200
+        }
+        this.width = 200
+        this.height = 20
+    }
+
+    drawPlatform() {
+        context.fillStyle = 'Red ';
+        context.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+    }
+}
+
+const platform = new Platform();
 
 const player = new Player();
 
@@ -60,6 +75,7 @@ function animation() { //this function will move the player recursively over the
     requestAnimationFrame(animation)
     context.clearRect(0, 0, canvas.width, canvas.height) //clears the previous positions of the player.
     player.updatePlayerPosition();
+    platform.drawPlatform();
 
     if (key.right.pressed) { //move the player when button d is pressed
         player.velocity.x = 5; //stop the player when the button is not pressed anymore
@@ -69,6 +85,13 @@ function animation() { //this function will move the player recursively over the
         player.velocity.x = 0;
     }
 
+    //All of the code below for platform collision detection untill the end of if statement
+    if (player.position.y + player.height <= platform.position.y &&
+        player.position.y + player.height + player.velocity.y >= platform.position.y &&
+        player.position.x + player.width > platform.position.x &&
+        player.position.x <= platform.position.x + platform.width) {
+        player.velocity.y = 0
+    }
 
 }
 animation();
@@ -83,9 +106,6 @@ window.addEventListener('keydown', ({ keyCode }) => {
             key.left.pressed = true;
             break;
 
-        case 83:
-            console.log('down');
-            break;
         case 68:
             console.log('move right');
             key.right.pressed = true;
@@ -103,10 +123,6 @@ window.addEventListener('keyup', ({ keyCode }) => {
         case 65:
             console.log('left')
             key.left.pressed = false;
-            break;
-
-        case 83:
-            console.log('down');
             break;
         case 68:
             console.log('move right');
