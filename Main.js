@@ -6,7 +6,7 @@ canvas.width = window.innerWidth // set the canvas window for the hall page
 
 canvas.height = window.innerHeight // set the canvas window for the hall page
 
-const gravity = 0.5
+const gravity = 0.3
 
 const key = {
     right: {
@@ -51,10 +51,10 @@ class Player {
 }
 
 class Platform { //platform is created
-    constructor() {
+    constructor(x, y) {
         this.position = {
-            x: 200,
-            y: 200
+            x: x,
+            y: y
         }
         this.width = 200
         this.height = 20
@@ -67,7 +67,7 @@ class Platform { //platform is created
     }
 }
 
-const platform = new Platform();
+const platforms = [new Platform(200, 100), new Platform(370, 250)];
 
 const player = new Player();
 
@@ -75,24 +75,45 @@ function animation() { //this function will move the player recursively over the
     requestAnimationFrame(animation)
     context.clearRect(0, 0, canvas.width, canvas.height) //clears the previous positions of the player.
     player.updatePlayerPosition();
-    platform.drawPlatform();
+    platforms.forEach(platform => {
+        platform.drawPlatform();
+    })
 
-    if (key.right.pressed) { //move the player when button d is pressed
+
+    if (key.right.pressed && player.position.x < 400) { //move the player when button d is pressed
         player.velocity.x = 5; //stop the player when the button is not pressed anymore
-    } else if (key.left.pressed) {
+    } else if (key.left.pressed && player.position.x > 100) {
         player.velocity.x = -5;
     } else {
         player.velocity.x = 0;
+
+        if (key.right.pressed) {
+            platforms.forEach(platform => {
+                platform.position.x -= 5 //moving the platforms
+            })
+            platforms.forEach(platform => {
+                platform.position.x -= 5 //moving the platforms
+            })
+
+        } else if (key.left.pressed) {
+            platforms.forEach(platform => {
+                platform.position.x += 5 //moving the platforms
+            })
+
+        }
     }
 
-    //All of the code below for platform collision detection untill the end of if statement
-    if (player.position.y + player.height <= platform.position.y &&
-        player.position.y + player.height + player.velocity.y >= platform.position.y &&
-        player.position.x + player.width > platform.position.x &&
-        player.position.x <= platform.position.x + platform.width) {
-        player.velocity.y = 0
-    }
+    platforms.forEach(platform => {
 
+
+        //All of the code below for platform collision detection untill the end of if statement
+        if (player.position.y + player.height <= platform.position.y &&
+            player.position.y + player.height + player.velocity.y >= platform.position.y &&
+            player.position.x + player.width > platform.position.x &&
+            player.position.x <= platform.position.x + platform.width) {
+            player.velocity.y = 0
+        }
+    })
 }
 animation();
 
