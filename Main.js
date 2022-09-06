@@ -67,6 +67,10 @@ class Platform { //platform is created
     }
 }
 
+let Offset = 0 //we use let because it would vary in over time
+
+
+
 const platforms = [new Platform(200, 100), new Platform(370, 250)];
 
 const player = new Player();
@@ -88,18 +92,21 @@ function animation() { //this function will move the player recursively over the
         player.velocity.x = 0;
 
         if (key.right.pressed) {
-            platforms.forEach(platform => {
-                platform.position.x -= 5 //moving the platforms
-            })
+            Offset += 5;
             platforms.forEach(platform => {
                 platform.position.x -= 5 //moving the platforms
             })
 
         } else if (key.left.pressed) {
+            Offset -= 5
             platforms.forEach(platform => {
                 platform.position.x += 5 //moving the platforms
             })
 
+        }
+
+        if (Offset > 2000) {
+            console.log("You have completed the level"); //THis indicates that you have won the game
         }
     }
 
