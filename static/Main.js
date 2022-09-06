@@ -1,3 +1,5 @@
+// import Platform from '.img';
+
 const canvas = document.querySelector('canvas') // creating the canvas
 
 const context = canvas.getContext('2d') //context of the canvas. Our game will be in 2D.
